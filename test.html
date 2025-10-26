@@ -97,8 +97,9 @@
                 name: 'ES6+ JavaScript Support',
                 test: () => {
                     try {
-                        eval('const test = () => {};');
-                        return true;
+                        // Test arrow functions and const without eval
+                        const testFunc = () => {};
+                        return typeof testFunc === 'function';
                     } catch (e) {
                         return false;
                     }
@@ -107,7 +108,7 @@
             {
                 name: 'SVG Support',
                 test: () => {
-                    return document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1");
+                    return !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect;
                 }
             },
             {
