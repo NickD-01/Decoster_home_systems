@@ -54,7 +54,10 @@ git clone https://github.com/NickD-01/Decoster_home_systems.git
 cd Decoster_home_systems
 ```
 
-2. Open `index.html` in your web browser:
+2. **Test browser compatibility (optional):**
+   Open `test.html` in your browser to verify all features are supported.
+
+3. Open `index.html` in your web browser:
 ```bash
 # On macOS
 open index.html
@@ -117,6 +120,7 @@ All settings and states are automatically saved to localStorage:
 Decoster_home_systems/
 ├── index.html          # Main HTML structure
 ├── app.js              # Application logic and state management
+├── test.html           # Browser compatibility test page
 ├── .gitignore          # Git ignore rules
 ├── README.md           # This file
 └── LICENSE             # Project license

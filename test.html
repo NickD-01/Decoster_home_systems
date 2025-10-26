@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser Compatibility Test - Decoster Home Systems</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .pass {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .fail {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>🏠 Decoster Home Systems</h1>
+    <h2>Browser Compatibility Test</h2>
+    
+    <div class="test-card">
+        <h3>Required Features</h3>
+        <div id="tests"></div>
+    </div>
+
+    <div class="test-card">
+        <h3>External Resources</h3>
+        <div id="cdn-tests"></div>
+    </div>
+
+    <div class="info" id="result"></div>
+
+    <div style="margin-top: 30px; text-align: center;">
+        <button onclick="window.location.href='index.html'">Launch Dashboard</button>
+    </div>
+
+    <script>
+        const testsDiv = document.getElementById('tests');
+        const cdnTestsDiv = document.getElementById('cdn-tests');
+        const resultDiv = document.getElementById('result');
+
+        const tests = [
+            {
+                name: 'LocalStorage Support',
+                test: () => {
+                    try {
+                        localStorage.setItem('test', 'test');
+                        localStorage.removeItem('test');
+                        return true;
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                name: 'ES6+ JavaScript Support',
+                test: () => {
+                    try {
+                        eval('const test = () => {};');
+                        return true;
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                name: 'SVG Support',
+                test: () => {
+                    return document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1");
+                }
+            },
+            {
+                name: 'CSS Grid Support',
+                test: () => {
+                    return CSS.supports('display', 'grid');
+                }
+            }
+        ];
+
+        let allPassed = true;
+
+        tests.forEach(test => {
+            const passed = test.test();
+            if (!passed) allPassed = false;
+            testsDiv.innerHTML += `
+                <div>
+                    ${test.name}: 
+                    <span class="status ${passed ? 'pass' : 'fail'}">${passed ? '✓ PASS' : '✗ FAIL'}</span>
+                </div>
+            `;
+        });
+
+        // Test CDN access
+        const cdnTests = [
+            {
+                name: 'Tailwind CSS CDN',
+                url: 'https://cdn.tailwindcss.com',
+                script: true
+            },
+            {
+                name: 'Chart.js CDN',
+                url: 'https://cdn.jsdelivr.net/npm/chart.js',
+                script: true
+            }
+        ];
+
+        cdnTests.forEach(cdnTest => {
+            const script = document.createElement('script');
+            script.onerror = () => {
+                cdnTestsDiv.innerHTML += `
+                    <div>
+                        ${cdnTest.name}: 
+                        <span class="status fail">✗ BLOCKED</span>
+                    </div>
+                `;
+                updateResult();
+            };
+            script.onload = () => {
+                cdnTestsDiv.innerHTML += `
+                    <div>
+                        ${cdnTest.name}: 
+                        <span class="status pass">✓ ACCESSIBLE</span>
+                    </div>
+                `;
+                updateResult();
+            };
+            script.src = cdnTest.url;
+            document.head.appendChild(script);
+        });
+
+        function updateResult() {
+            if (allPassed) {
+                resultDiv.innerHTML = `
+                    <strong>✓ Your browser is compatible!</strong><br>
+                    All required features are supported. You can proceed to use the Decoster Home Systems dashboard.
+                    ${cdnTestsDiv.innerHTML.includes('BLOCKED') ? '<br><br><strong>Note:</strong> Some CDN resources may be blocked. The dashboard functionality will work, but styling may be limited.' : ''}
+                `;
+            } else {
+                resultDiv.innerHTML = `
+                    <strong>✗ Compatibility Issues Detected</strong><br>
+                    Your browser does not support all required features. Please update your browser or use a modern browser like Chrome, Firefox, Safari, or Edge.
+                `;
+            }
+        }
+
+        setTimeout(updateResult, 2000);
+    </script>
+</body>
+</html>
